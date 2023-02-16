@@ -1,0 +1,12 @@
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\bin\Debug\netcoreapp3.1\CollisionCounter.exe
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\bin\Debug\netcoreapp3.1\CollisionCounter.deps.json
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\bin\Debug\netcoreapp3.1\CollisionCounter.runtimeconfig.json
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\bin\Debug\netcoreapp3.1\CollisionCounter.runtimeconfig.dev.json
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\bin\Debug\netcoreapp3.1\CollisionCounter.dll
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\bin\Debug\netcoreapp3.1\CollisionCounter.pdb
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.AssemblyInfoInputs.cache
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.AssemblyInfo.cs
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.csproj.CoreCompileInputs.cache
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.dll
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.pdb
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.genruntimeconfig.cache
