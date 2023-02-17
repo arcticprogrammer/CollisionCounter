@@ -10,3 +10,4 @@ C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcorea
 C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.dll
 C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.pdb
 C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.genruntimeconfig.cache
+C:\Users\moham\source\repos\CollisionCounter\CollisionCounter\obj\Debug\netcoreapp3.1\CollisionCounter.csprojAssemblyReference.cache

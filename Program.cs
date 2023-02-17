@@ -25,6 +25,7 @@ namespace CollisionCounter
     class Program
     {
         private static readonly Random R = new Random();
+        private static readonly RandomNumberGenerator RNG = RandomNumberGenerator.Create();
 
         static void Main(string[] args)
         {
@@ -90,15 +91,20 @@ namespace CollisionCounter
 
 
             //run findCollisions using the array list from generateNumList, i number of times
-            int i = 0;
+            int setNumber = 0; //1.2.1 keep track of set number in prints
             ArrayList numList;
+
+            //1.2 ask if user wants to display numlist and collisions
+            bool boolPrintNumList = DisplayOptionPrompt(0);
+            bool boolPrintL1Collisions = DisplayOptionPrompt(1);
+            bool boolPrintL2Collisions = DisplayOptionPrompt(2);
 
             do
             {
                 numList = GenerateNumList(upperBound, useSecureRandom);
-                totalCollisions += FindCollisions(numList);
-                i++;
-            } while (i < repeats);
+                totalCollisions += FindCollisions(numList, boolPrintNumList, boolPrintL1Collisions, boolPrintL2Collisions, setNumber + 1);
+                setNumber++;
+            } while (setNumber < repeats);
 
             Console.WriteLine("Average collision percentage is: " + AverageCollisionPercentage(totalCollisions, upperBound, repeats) + "%");
         }
@@ -114,10 +120,9 @@ namespace CollisionCounter
             {
                 byte[] bytes = new byte[4];
                 int number;
-                RandomNumberGenerator rng = RandomNumberGenerator.Create();
                 for (int i = 0; i < upperBound; i++)
                 {
-                    rng.GetBytes(bytes);
+                    RNG.GetBytes(bytes);
                     number = BitConverter.ToInt32(bytes) % upperBound;
                     numList.Add(number);
                 }
@@ -128,27 +133,31 @@ namespace CollisionCounter
                     numList.Add(R.Next(upperBound));
             }
 
-            PrintNumList(numList);
+            //PrintNumList(numList);
             return numList;
 
         }
 
-        static int FindCollisions(ArrayList numList)
+        static int FindCollisions(ArrayList numList, bool boolPrintNumList, bool boolPrintL1Collisions, bool boolPrintL2Collisions, int setNumber)
         {
             //sort arraylist
             numList.Sort();
-            //printNumList(numList);
 
             //get index of number and its neighbor
             int heldIndex = 0;
             int comparedIndex = heldIndex;
-            int localCollisions;
+            int localCollisions = 0;
             int totalCollisions = 0;
 
-            //1.1 largest collisions
+            //1.1 keep track of largest collisions and associated number
             int largestCollisionValue = 0;
             int largestCollisionCount = 0;
 
+            //print numlist
+            if (boolPrintNumList)
+                PrintNumList(numList, setNumber);
+
+            Console.WriteLine("\n===SET " + setNumber + " COLLISION STATS===");
             do
             {
                 int numberInHeldIndex = (int)numList[heldIndex];
@@ -164,6 +173,9 @@ namespace CollisionCounter
                     localCollisions = CollisionCount(comparedIndex, heldIndex);
                     totalCollisions += localCollisions;
 
+                    //print L1 collision stats
+                    if (boolPrintL1Collisions)
+                        PrintL1CollisionPrompt(numberInHeldIndex, localCollisions);
                     //then break out of do-while
                     break;
                 }
@@ -174,6 +186,9 @@ namespace CollisionCounter
                     localCollisions = CollisionCount(comparedIndex, heldIndex);
                     totalCollisions += localCollisions;
 
+                    //print L1 collision stats
+                    if (boolPrintL1Collisions)
+                        PrintL1CollisionPrompt(numberInHeldIndex, localCollisions);
                     //then go to next number
                     heldIndex = comparedIndex++;
                     comparedIndex = heldIndex;
@@ -184,6 +199,10 @@ namespace CollisionCounter
                 {
                     localCollisions = CollisionCount(comparedIndex, heldIndex);
                     totalCollisions += localCollisions;
+
+                    //print L1 collision stats
+                    if (boolPrintL1Collisions)
+                        PrintL1CollisionPrompt(numberInHeldIndex, localCollisions);
                 }
 
                 //if current largest collision count is less than compared number's collision count, update largest count to new number
@@ -196,14 +215,20 @@ namespace CollisionCounter
                 //repeat while (heldIndex + 1) is not out of bounds
             } while (heldIndex < numList.Count);
 
-            PrintL2CollisionPrompt(totalCollisions, largestCollisionCount, largestCollisionValue);
+            //printing L2 collision stats
+            if (boolPrintL2Collisions)
+                PrintL2CollisionPrompt(totalCollisions, largestCollisionCount, largestCollisionValue);
+
+            Console.WriteLine("===SET " + setNumber + " COLLISION STATS===\n");
+
 
             return totalCollisions;
         }
 
         //QOL
-        static void PrintNumList(ArrayList numList)
+        static void PrintNumList(ArrayList numList, int set)
         {
+            Console.WriteLine("\n======SET " + set + "======");
             int i = 1;
             //numList.Sort();
             foreach (int num in numList)
@@ -211,18 +236,22 @@ namespace CollisionCounter
                 Console.WriteLine(i + ": " + num);
                 i++;
             }
-            Console.WriteLine("There are " + numList.Count + " numbers in this list.");
+            //Console.WriteLine("There are " + numList.Count + " numbers in this list.");
+            Console.WriteLine("======SET " + set + "======\n");
         }
 
         static void PrintL1CollisionPrompt(int num, int collisions)
         {
-            Console.WriteLine("Num: " + num + ", Collisions: " + collisions);
+            //if no collisions, don't print anything
+            if (collisions != 0)
+                Console.WriteLine("Num: " + num + ", Collisions: " + collisions);
             //return null;
         }
 
         static void PrintL2CollisionPrompt(int totalCollisions, int largestCollisionCount, int largestCollisionValue)
         {
-            Console.WriteLine("Collisions: " + totalCollisions + ". Largest number of collisions: " + largestCollisionCount + " for the number " + largestCollisionValue);
+            Console.WriteLine("Total collisions in this set: " + totalCollisions + ". " +
+                "\nLargest number of collisions was: " + largestCollisionCount + ", for the number " + largestCollisionValue);
             //return null;
         }
 
@@ -235,6 +264,60 @@ namespace CollisionCounter
         {
             double average = (double)totalCollisions / (double)(repeats * upperBound) * 100.00;
             return average;
+        }
+
+        static bool DisplayOptionPrompt(int level)
+        {
+            switch (level) 
+            {
+                case 0: //for listing generated numbers
+                    Console.Write("Do you want to list the generated numbers? ");
+                    if (GetYesOrNo())
+                        return true;
+                    break;
+                case 1: //for L1CollisionPrompt
+                    Console.Write("List local collision stats? ");
+                    if (GetYesOrNo())
+                        return true;
+                    break;
+                case 2: //for L2CollisionPrompt
+                    Console.Write("List total and largest collisions in each generation? ");
+                    if (GetYesOrNo())
+                        return true;
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
+        }
+
+        static bool GetYesOrNo()
+        {
+            bool validInput = false;
+            bool userInput = false;
+
+            do
+            {
+                string input = Console.ReadLine();
+                if (input.Equals("Y") || input.Equals("y"))
+                {
+                    userInput = true;
+                    validInput = true;
+                }
+
+                if (input.Equals("N") || input.Equals("n"))
+                {
+                    userInput = false;
+                    validInput = true;
+                }
+
+                if (validInput == false)
+                    Console.WriteLine("Invalid input. Must be Y or N.");
+
+            } while (validInput == false);
+
+            return userInput;
         }
     }
 }
